@@ -1,0 +1,73 @@
+require:
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2.2
+  SuggestExtensions: false
+  Exclude:
+    - 'vendor/**/*'
+    - 'bin/**/*'
+    - 'db/**/*'
+    - 'config/environments/*.rb'
+
+Style/Documentation:
+  Description: 'Document classes and non-namespace modules.'
+  Enabled: false
+
+Style/MethodCallWithArgsParentheses:
+  Description: 'Use parentheses for method calls with arguments.'
+  StyleGuide: '#method-invocation-parens'
+  Enabled: true
+  AllowedMethods:
+    - render
+    - to
+  AllowedPatterns:
+    - ^assert
+  Exclude:
+    - test/**/*
+    - spec/**/*
+
+Layout/LineLength:
+  Max: 140
+  # To make it possible to copy or click on URIs in the code, we allow lines
+  # containing a URI to be longer than Max.
+  AllowHeredoc: true
+  AllowURI: true
+  URISchemes:
+    - http
+    - https
+  Exclude:
+    - config/initializers/devise.rb
+
+Metrics/BlockLength:
+  AllowedMethods: ['describe', 'context', 'define']
+  Exclude:
+    - spec/factories/**/**/*
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: either
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Rails/HttpPositionalArguments:
+  Enabled: false
+
+RSpec/Rails/InferredSpecType:
+  Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  AllowedMethods: ['satisfy']
+
+Rails/UnknownEnv:
+  Environments:
+    - development
+    - staging
+    - test
+    - production
+    - migration

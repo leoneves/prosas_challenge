@@ -1,0 +1,26 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: prosas_challenge_development
+  username: dev_user
+  password: dev123
+  host: localhost
+  port: 5432
+
+test:
+  <<: *default
+  database: prosas_challenge_test
+  username: test_user
+  password: test123
+  host: localhost
+  port: 5434
+
+production:
+  <<: *default
+  database: prosas_challenge_production
+  username: prosas_challenge
+  password: <%= ENV["PROSAS_CHALLENGE_DATABASE_PASSWORD"] %>
