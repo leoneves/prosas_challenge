@@ -10,7 +10,7 @@ RSpec.describe Grade, type: :model do
       let(:assessment) { create(:assessment, project: create(:project)) }
       let(:criteria) { create(:criteria) }
       let(:params) do
-        { grade: 7.58, assessment_id: assessment.id, criteria_id: criteria.id  }
+        { grade: 7.58, assessment_id: assessment.id, criteria_id: criteria.id }
       end
 
       it { is_expected.to be_valid }
