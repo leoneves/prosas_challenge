@@ -23,6 +23,7 @@ Style/MethodCallWithArgsParentheses:
   AllowedMethods:
     - render
     - to
+    - raise
   AllowedPatterns:
     - ^assert
   Exclude:
@@ -40,12 +41,18 @@ Layout/LineLength:
     - https
   Exclude:
     - config/initializers/devise.rb
-
+      
+Metrics/MethodLength:
+  Max: 20
+  
 Metrics/BlockLength:
   AllowedMethods: ['describe', 'context', 'define']
   Exclude:
     - spec/factories/**/**/*
 
+Metrics/AbcSize:
+  Max: 19
+  
 Style/HashSyntax:
   EnforcedShorthandSyntax: either
 
@@ -55,11 +62,17 @@ Rails/HasAndBelongsToMany:
 Rails/HttpPositionalArguments:
   Enabled: false
 
-RSpec/Rails/InferredSpecType:
+RSpecRails/InferredSpecType:
   Enabled: false
 
 RSpec/DescribedClass:
   Enabled: false
+  
+RSpec/AnyInstance:
+  Enabled: false
+  
+RSpec/MultipleExpectations:
+  Max: 4
 
 Lint/AmbiguousBlockAssociation:
   AllowedMethods: ['satisfy']
