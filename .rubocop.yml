@@ -55,7 +55,7 @@ Metrics/AbcSize:
   
 Style/HashSyntax:
   EnforcedShorthandSyntax: either
-
+  
 Rails/HasAndBelongsToMany:
   Enabled: false
 
@@ -73,6 +73,9 @@ RSpec/AnyInstance:
   
 RSpec/MultipleExpectations:
   Max: 4
+  
+RSpec/EmptyLineAfterExample:
+  Enabled: false
 
 Lint/AmbiguousBlockAssociation:
   AllowedMethods: ['satisfy']

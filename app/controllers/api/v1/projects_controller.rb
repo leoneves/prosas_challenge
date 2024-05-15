@@ -3,6 +3,15 @@
 module Api
   module V1
     class ProjectsController < ApplicationController
+      def index
+        page = (params[:page] || 1).to_i
+
+        projects = Project.includes(assessments: [grades: :criteria]).page(page)
+        return render json: projects, status: :ok if projects.any?
+
+        head(:not_found)
+      end
+
       def create
         permitted_params = params.permit(:id, :name, assessments: [grades: [:grade, { criteria: %i[id weight] }]])
 

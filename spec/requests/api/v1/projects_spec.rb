@@ -89,4 +89,41 @@ RSpec.describe 'Api::V1::Projects', type: :request do
       end
     end
   end
+
+  describe 'GET /index' do
+    subject(:do_request) do
+      get api_v1_projects_path, params: params
+      response
+    end
+
+    context 'without paginate' do
+      before { create_list(:project, 2, :with_assessments, size: 2) }
+
+      let(:params) { nil }
+      let(:satisfied_response) do
+        satisfy do |res|
+          res.is_a?(Array) && res.each { |obj| !obj[:assessments].empty? }
+        end
+      end
+
+      it { is_expected.to have_http_status(:ok) }
+      it do
+        do_request
+        expect(parsed_body).to satisfied_response
+      end
+    end
+
+    context 'with paginate' do
+      before { create_list(:project, 2, :with_assessments, size: 2) }
+
+      let(:params) { { page: 2 } }
+      let(:satisfied_response) do
+        satisfy do |res|
+          res.is_a?(Array) && res.empty?
+        end
+      end
+
+      it { is_expected.to have_http_status(:not_found) }
+    end
+  end
 end
