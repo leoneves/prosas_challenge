@@ -42,9 +42,11 @@ RSpec.describe ProjectManagement do
         {
           name: 'p1',
           assessments: [
-            {
-              grade: 7.5
-            }
+            grades: [
+              {
+                grade: 7.5
+              }
+            ]
           ]
         }
       end

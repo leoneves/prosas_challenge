@@ -34,9 +34,13 @@ module ProjectManagement
     return if assessments.blank?
 
     assessments.each do |assessment|
+      next if assessment[:grades].empty?
+
       persisted_assessment = Assessment.create(project_id: project_id)
-      criteria = Criteria.create(weight: assessment.dig(:criteria, :weight))
-      Grade.create(grade: assessment[:grade], assessment_id: persisted_assessment.id, criteria_id: criteria.id)
+      assessment[:grades]&.each do |grade|
+        criteria = Criteria.create(weight: grade[:criteria][:weight])
+        Grade.create(grade: grade[:grade], assessment_id: persisted_assessment.id, criteria_id: criteria.id)
+      end
     end
   end
 end

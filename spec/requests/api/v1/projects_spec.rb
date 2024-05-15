@@ -45,11 +45,15 @@ RSpec.describe 'Api::V1::Projects', type: :request do
           name: 'p1',
           assessments: [
             {
-              grade: 7.5,
-              criteria: {
-                id: criteria.id,
-                weight: criteria.weight
-              }
+              grades: [
+                {
+                  grade: 7.5,
+                  criteria: {
+                    id: criteria.id,
+                    weight: criteria.weight
+                  }
+                }
+              ]
             }
           ]
         }
@@ -60,6 +64,28 @@ RSpec.describe 'Api::V1::Projects', type: :request do
       it do
         do_request
         expect(Project.last.assessments).not_to be_empty
+      end
+    end
+
+    context 'without grades' do
+      let(:criteria) { create(:criteria, id: 1, weight: 3.5) }
+
+      let(:params) do
+        {
+          name: 'p1',
+          assessments: [
+            {
+              grades: []
+            }
+          ]
+        }
+      end
+
+      it { is_expected.to have_http_status(:created) }
+
+      it do
+        do_request
+        expect(Project.last.assessments).to be_empty
       end
     end
   end
