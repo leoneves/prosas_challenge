@@ -18,10 +18,14 @@ RSpec.describe 'Api::V1::Criterias', type: :request do
     end
 
     context 'with existent criteria' do
-      before { create(:criteria, id: 1, weight: 3) }
+      before do
+        assessment = create(:assessment, id: 1, project: create(:project))
+        grade = create(:grade, assessment: assessment, criteria: create(:criteria, id: 1, weight: 3))
+        assessment.update(grades: [grade])
+      end
 
       let(:params) do
-        { id: 1, weight: 2 }
+        { id: 1, weight: 1 }
       end
 
       it { is_expected.to have_http_status(:created) }

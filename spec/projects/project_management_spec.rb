@@ -115,4 +115,46 @@ RSpec.describe ProjectManagement do
       end
     end
   end
+
+  describe '.update_assessments' do
+    subject(:update_assessments) do
+      described_class.update_assessments(new_assessments, project)
+    end
+
+    context 'when changing a grade for one assessment' do
+      before do
+        criteria1 = create(:criteria, weight: 2)
+        criteria2 = create(:criteria, weight: 2)
+        criteria3 = create(:criteria, weight: 2)
+        assessment1 = create(:assessment, id: 1, weighted_mean: 4, project: project)
+        assessment2 = create(:assessment, id: 2, weighted_mean: 4, project: project)
+        assessment1.grades = [
+          create(:grade, id: 1, grade: 4, criteria: criteria1, assessment: assessment1),
+          create(:grade, id: 3, grade: 4, criteria: criteria3, assessment: assessment1)
+        ]
+        assessment2.grades = [create(:grade, id: 2, grade: 4, criteria: criteria2, assessment: assessment2)]
+        assessment1.reload
+        assessment2.reload
+      end
+
+      let(:project) do
+        create(:project)
+      end
+      let(:new_assessments) do
+        [
+          {
+            id: 1,
+            grades: [
+              { id: 1, grade: 8, criteria: { weight: 4 } }
+            ]
+          }
+        ]
+      end
+
+      it do
+        update_assessments
+        expect(project.average).to eq(5.335)
+      end
+    end
+  end
 end

@@ -29,7 +29,24 @@ module Criterias
   end
 
   def update_criteria(criteria, params)
+    if criteria.weight != params[:weight].to_i
+      assessments = Assessment.includes(:grades).where(grades: { criteria: criteria })
+      assessments.each do |assessment|
+        grade_to_update = assessment.grades.find { |grade| grade.criteria_id == params[:id] }
+        grade_to_update.criteria.weight = params[:weight]
+        ProjectManagement.update_assessments(convert_to_hash(assessments), assessment.project)
+      end
+    end
+
     criteria.update(weight: params[:weight])
+  end
+
+  def convert_to_hash(assessments)
+    JSON.parse(
+      ActiveModel::Serializer::CollectionSerializer.new(
+        assessments, each_serializer: AssessmentSerializer
+      ).to_json, symbolize_names: true
+    )
   end
 
   private_methods %i[update_criteria]

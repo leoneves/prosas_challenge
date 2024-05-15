@@ -53,14 +53,37 @@ module ProjectManagement
     project
   end
 
-  # I will implement later
-  def update_assessment(_assessments, _project); end
+  def update_assessments(new_assessments, project)
+    persisted_assessments = Assessment.where(id: new_assessments.pluck(:id))
+    changed_assessments = persisted_assessments.map do |assessment|
+      assessment_to_change = new_assessments.find { |h| h[:id] == assessment.id }
+      assessment_for_calc = merge_updated_grades_in_assessment(assessment, assessment_to_change)
+      assessment_for_calc.weighted_mean = Assessments.calc_weighted_mean(assessment_for_calc)
+      assessment.update!(weighted_mean: assessment_for_calc.weighted_mean)
+      assessment_for_calc
+    end
+
+    project.update!(average: Assessments.calc_average(Utils.update_object_in_list(project.assessments, changed_assessments)))
+  end
 
   def update_project(project, params)
     project.update(name: params[:name])
-    update_assessment(params[:assessments], project.id)
+    update_assessments(params[:assessments], project.id) if params[:assessments].present?
     project.update!(average: Assessments.calc_average(project.assessments)) if project.assessments.present?
     project
+  end
+
+  def merge_updated_grades_in_assessment(saved_assessment, new_assessment)
+    Assessment.new.tap do |o|
+      new_assessment[:grades].each do |g|
+        updated_grade = Grade.hash_to_object(g, saved_assessment)
+        o.grades << updated_grade
+        Grade.update_by_id(updated_grade.id, updated_grade)
+      end
+      index_to_reject = new_assessment[:grades].pluck(:id)
+      o.grades << saved_assessment.grades.reject { |g| index_to_reject.include?(g.id) }
+      o.id = saved_assessment.id
+    end
   end
 
   private_methods %i[create_new_project update_project]
