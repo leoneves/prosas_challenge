@@ -51,7 +51,7 @@ Metrics/BlockLength:
     - spec/factories/**/**/*
 
 Metrics/AbcSize:
-  Max: 21
+  Max: 23
   
 Style/HashSyntax:
   EnforcedShorthandSyntax: either

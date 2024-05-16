@@ -67,9 +67,8 @@ module ProjectManagement
   end
 
   def update_project(project, params)
+    update_assessments(params[:assessments], project) if params[:assessments].present?
     project.update(name: params[:name])
-    update_assessments(params[:assessments], project.id) if params[:assessments].present?
-    project.update!(average: Assessments.calc_average(project.assessments)) if project.assessments.present?
     project
   end
 
